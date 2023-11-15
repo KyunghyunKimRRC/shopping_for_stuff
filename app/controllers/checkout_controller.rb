@@ -24,22 +24,28 @@ class CheckoutController < ApplicationController
       payment_method_types: ['card'],
       success_url: checkout_success_url + '?session_id={CHECKOUT_SESSION_ID}',
       cancel_url: checkout_cancel_url,
-      line_items: [
-        {
-          name: product.name,
-          description: product.description,
-          amount: product.price_cents,
-          currency: 'cad',
-          quantity: 1 # We will hardcode one for this demo.
+      mode: 'payment',
+      line_items: [{
+        price_data: {
+        currency: 'cad',
+        product_data: {
+        name: product.name,
+        description: product.description
         },
-        {
-          name: 'GST',
-          description: 'Goods and Services Tax',
-          amount: (product.price_cents * 0.05).to_i,
-          currency: 'cad',
-          quantity: 1
-        }
-      ]
+        unit_amount: product.price_cents
+        },
+        quantity: 1
+        },{
+        price_data: {
+        currency: 'cad',
+        product_data: {
+        name: 'GST',
+        description: 'Goods and Services Tax'
+        },
+        unit_amount: (product.price_cents * 0.05).to_i
+        },
+        quantity: 1
+        }]
     )
 
     # BEFORE this, you will probably have wanted to LOOP over all line items to create and array of these items.
